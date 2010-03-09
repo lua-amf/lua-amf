@@ -1,0 +1,16 @@
+*~
+.*~
+\#*\#
+.\#*\#
+
+.DS_Store
+.project
+.settings
+.directory
+
+*.kdevelop.*
+*.kdevelop
+*.kdevses
+/Doxyfile
+
+*.so
