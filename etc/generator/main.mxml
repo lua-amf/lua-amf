@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application name="FileReference_save_test"
+  xmlns:fx="http://ns.adobe.com/mxml/2009"
+  xmlns:s="library://ns.adobe.com/flex/spark"
+  xmlns:mx="library://ns.adobe.com/flex/halo"
+  xmlns:net="flash.net.*"
+  creationComplete="init();">
+  <fx:Script>
+    <![CDATA[
+      private function format_str(string:String):String {
+        while(string.length < 3) {
+          string = "0".concat(string)
+        }
+        return string
+      }
+
+      private function add_binary(bin:ByteArray):String {
+        var str_bin:String = new String()
+        str_bin = str_bin.concat("  \"")
+        for(var i:int = 0; i < bin.length; i++) {
+          str_bin = str_bin.concat("\\", format_str(bin[i]))
+        }
+        str_bin = str_bin.concat("\";")
+        return str_bin
+      }
+
+      private function add_object(obj:*):String
+      {
+        var byteArray:ByteArray = new ByteArray()
+        byteArray.writeObject(obj)
+        var str_curr:String = new String()
+        str_curr = str_curr.concat(add_binary(byteArray), " -- \"", obj, "\"\n")
+        return str_curr
+      }
+
+      private function init():void {
+        var str:String = "test_data = {\n"
+        str = str.concat(add_object(null))
+        str = str.concat(add_object(false))
+        str = str.concat(add_object(true))
+
+        str = str.concat(add_object(12))
+        str = str.concat(add_object(0))
+        str = str.concat(add_object(-1200))
+
+        str = str.concat(add_object(9999999999999999999999999999999999999))
+        str = str.concat(add_object(-0.1))
+        str = str.concat(add_object(-0.000000000000000000000001))
+        str = str.concat(add_object(-1/0))
+        str = str.concat(add_object(1/0))
+        str = str.concat(add_object(0/0))
+
+        str = str.concat(add_object("\x00\x00\x00\x00\u263a"))
+        str = str.concat(add_object("a"))
+        str = str.concat(add_object("some string"))
+        str = str.concat(add_object("some long string"))
+        str = str.concat(add_object("\0"))
+
+        str = str.concat(add_object([1, 2, 3]))
+        str = str.concat("}\n")
+        textArea.text = str
+      }
+
+      private function btn_click(evt:MouseEvent):void {
+        fileReference.save(textArea.text, "describeType.txt");
+      }
+    ]]>
+  </fx:Script>
+
+  <fx:Declarations>
+    <net:FileReference id="fileReference" />
+  </fx:Declarations>
+
+  <s:Panel id="panel" width="80%" height="80%"
+    verticalCenter="0" horizontalCenter="0">
+    <s:controlBarContent>
+      <s:Button id="btn" label="Save Text" click="btn_click(event);" />
+    </s:controlBarContent>
+    <s:TextArea id="textArea" editable="false" width="100%" height="100%" />
+  </s:Panel>
+
+</s:Application>
