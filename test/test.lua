@@ -23,8 +23,9 @@ assert(luaamf.load)
 
 local loaded = {}
 
-for i = 1, #test_data do
-  local res, err = luaamf.load(test_data[i])
+for k, v in pairs(test_data) do
+  local res, err = luaamf.load(v)
+  print("     Key:", k)
   print("  Loaded:", res, "(type: " .. type(res) .. ")")
   if type(res) == "string" then
     print("Length: ", res:len())

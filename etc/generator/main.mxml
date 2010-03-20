@@ -16,11 +16,9 @@
 
       private function add_binary(bin:ByteArray):String {
         var str_bin:String = new String()
-        str_bin = str_bin.concat("  \"")
         for(var i:int = 0; i < bin.length; i++) {
           str_bin = str_bin.concat("\\", format_str(bin[i]))
         }
-        str_bin = str_bin.concat("\";")
         return str_bin
       }
 
@@ -29,19 +27,28 @@
         var byteArray:ByteArray = new ByteArray()
         byteArray.writeObject(obj)
         var str_curr:String = new String()
-        str_curr = str_curr.concat(add_binary(byteArray), " -- \"", obj, "\"\n")
+        str_curr = str_curr.concat("  [\"", obj, "\"] = \"", add_binary(byteArray), "\";\n")
         return str_curr
       }
 
       private function init():void {
-        var str:String = "test_data = {\n"
+        var str:String = "local test_data = {\n"
         str = str.concat(add_object(null))
         str = str.concat(add_object(false))
         str = str.concat(add_object(true))
 
         str = str.concat(add_object(12))
         str = str.concat(add_object(0))
+        str = str.concat(add_object(128))
+        str = str.concat(add_object(129))
+        str = str.concat(add_object(256))
+        str = str.concat(add_object(448))
+        str = str.concat(add_object(447 * 2 + 1))
+        str = str.concat(add_object(65536))
+        str = str.concat(add_object(150200))
+        str = str.concat(add_object(-1))
         str = str.concat(add_object(-1200))
+        str = str.concat(add_object(-120000))
 
         str = str.concat(add_object(9999999999999999999999999999999999999))
         str = str.concat(add_object(-0.1))
@@ -50,14 +57,19 @@
         str = str.concat(add_object(1/0))
         str = str.concat(add_object(0/0))
 
-        str = str.concat(add_object("\x00\x00\x00\x00\u263a"))
         str = str.concat(add_object("a"))
         str = str.concat(add_object("some string"))
         str = str.concat(add_object("some long string"))
-        str = str.concat(add_object("\0"))
+        str = str.concat(add_object(""))
+        str = str.concat(add_object("65536"))
+        str = str.concat(add_object("A\x00B"))
+        str = str.concat(add_object("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))
+        str = str.concat(add_object("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Et 1234567890 symbols."))
+        str = str.concat(add_object("\x00\x00\x00\x00Embedded Zeros\x00\x00\x00\x00"))
+        str = str.concat(add_object("Final object"))
 
         str = str.concat(add_object([1, 2, 3]))
-        str = str.concat("}\n")
+        str = str.concat("}\nreturn test_data\n")
         textArea.text = str
       }
 
