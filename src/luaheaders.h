@@ -1,20 +1,20 @@
 /*
 * luaheaders.h: C++-safe Lua headers inclusion
-* Copyright (c) 2009, lua-noise authors
+* Copyright (c) 2010, lua-noise authors
 * See copyright information in the COPYRIGHT file
 */
 
-#ifndef LUANOISE_LUAHEADERS_H_
-#define LUANOISE_LUAHEADERS_H_
+#ifndef LUAAMF_LUAHEADERS_H_
+#define LUAAMF_LUAHEADERS_H_
 
-#if defined (__cplusplus) && !defined (LUANOISE_LUABUILTASCPP)
+#if defined (__cplusplus) && !defined (LUAAMF_LUABUILTASCPP)
 extern "C" {
 #endif
 
 #include <lua.h>
 #include <lauxlib.h>
-#if defined (__cplusplus) && !defined (LUANOISE_LUABUILTASCPP)
+#if defined (__cplusplus) && !defined (LUAAMF_LUABUILTASCPP)
 }
 #endif
 
-#endif /* LUANOISE_LUAHEADERS_H_ */
+#endif /* LUAAMF_LUAHEADERS_H_ */

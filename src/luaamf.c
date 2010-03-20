@@ -1,10 +1,11 @@
 /*
-* lua_amf.c
-* Lua-amf Lua module code
+* luaamf.c: Lua-AMF Lua module code
+* Copyright (c) 2010, lua-noise authors
+* See copyright information in the COPYRIGHT file
 */
 
 #include "luaheaders.h"
-#include "lua_amf.h"
+#include "luaamf.h"
 
 /*
 * On success returns data string.
@@ -12,7 +13,7 @@
 */
 static int l_save(lua_State * L)
 {
-  int error = lua_amf_save(L);
+  int error = luaamf_save(L);
   if (error == 0)
   {
     return 1;
@@ -30,8 +31,6 @@ static int l_save(lua_State * L)
 
 static int l_load(lua_State * L)
 {
-  int count = 0;
-  int error = 0;
   size_t len = 0;
   const unsigned char * data = (const unsigned char *)luaL_checklstring(
       L, 1, &len
@@ -39,11 +38,7 @@ static int l_load(lua_State * L)
 
   lua_pushboolean(L, 1);
 
-  error = lua_amf_load(L, data, len, &count);
-  if (error == 0)
-  {
-    return count + 1;
-  }
+  if (!luaamf_load(L, data, len)) return 1;
 
   lua_pushnil(L);
   lua_replace(L, -3); /* Put nil before error message on stack */
@@ -63,9 +58,9 @@ static const struct luaL_reg R[] =
 extern "C" {
 #endif
 
-LUALIB_API int luaopen_lua_amf(lua_State * L)
+LUALIB_API int luaopen_luaamf(lua_State * L)
 {
-  luaL_register(L, "lua_amf", R);
+  luaL_register(L, "luaamf", R);
   lua_pushliteral(L, LUAAMF_VERSION);
   lua_setfield(L, -2, "VERSION");
 

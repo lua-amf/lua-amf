@@ -1,20 +1,16 @@
--- ----------------------------------------------------------------------------
--- test.lua
--- Lua-amf test suite
--- See copyright notice in lua-amf.h
--- ----------------------------------------------------------------------------
+-- test.lua: Lua-amf test suite
 
-package.cpath = "../?.so"
+package.cpath = "../lib/?.so;lib/?.so;"
 
 local print, require, assert = print, require, assert
 
-local lua_amf_local = require('lua_amf')
+local luaamf_local = require('luaamf')
 
-assert(lua_amf_local == lua_amf)
-assert(type(lua_amf.save) == "function")
-assert(type(lua_amf.load) == "function")
+assert(luaamf_local == luaamf)
+assert(type(luaamf.save) == "function")
+assert(type(luaamf.load) == "function")
 
-test_data = dofile('../etc/generator/data.lua')
+test_data = dofile('etc/generator/data.lua')
 
 --local make_suite = assert(loadfile('../../lua-nucleo/test/test-lib/init/strict.lua'))(...)
 --local test = make_suite("algorithm", algorithm_exports)
@@ -22,25 +18,28 @@ test_data = dofile('../etc/generator/data.lua')
 local randomseed = 1235134892
 --local randomseed = os.time()
 
-assert(lua_amf.save)
-assert(lua_amf.load)
+assert(luaamf.save)
+assert(luaamf.load)
 
 local loaded = {}
 
 for i = 1, #test_data do
-  local res, err = lua_amf.load(test_data[i])
-  print("Loaded:", res, "(type: " .. type(res) .. ")")
+  local res, err = luaamf.load(test_data[i])
+  print("  Loaded:", res, "(type: " .. type(res) .. ")")
   if type(res) == "string" then
     print("Length: ", res:len())
   end
   if err then
     print("Error: ", err)
   else
-    io.write("Saved: ")
-    loaded[#loaded + 1] = res
-    res, err = lua_amf.save(loaded[#loaded])
-    print() --lua_amf.save(res))
+    current = res
+    res, err = luaamf.load(luaamf.save(current))
+    print("RELoaded:", res, "(type: " .. type(res) .. ")")
+    if type(res) == "string" then
+      print("Length: ", res:len())
+    end
   end
+  print()
 end
 
 -- ----------------------------------------------------------------------------

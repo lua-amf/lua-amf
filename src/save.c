@@ -1,61 +1,126 @@
 /*
-* save.c
-* Lua-amf Lua module code
+* save.c: Lua-AMF Lua module code
+* Copyright (c) 2010, lua-noise authors
+* See copyright information in the COPYRIGHT file
 */
 
 #include "luaheaders.h"
-#include "lua_amf.h"
+#include "luaamf.h"
 #include "saveload.h"
+#include "savebuffer.h"
 
-int lua_amf_save(lua_State * L)
+static int encode_double(luaamf_SaveBuffer *sb, double value)
 {
-  unsigned char num_to_save = 0;
-  int result = LUA_AMF_ESUCCESS;
-  int base = lua_gettop(L);
-  int length = 0;
-  unsigned char * sb;
+   /* Put bytes from double into byte array */
+   union aligned { /* use the same memory for d_value and c_value */
+       double d_value;
+       char c_value[8];
+   } d_aligned;
+   char *char_value = d_aligned.c_value;
+   d_aligned.d_value = value;
+
+   /* Flip */
+   {
+     int i;
+     unsigned char context[9];
+     context[0] = DOUBLE_AMF;
+     for(i = 1; i <= 8; i++) { context[i] = char_value[8 - i]; }
+     sb_write(sb, context, 9);
+   }
+   return LUAAMF_ESUCCESS;
+}
+
+static int encode_int(luaamf_SaveBuffer *sb, int value)
+{
+    char tmp[4];
+    size_t tmp_size;
+
+    /*
+     * Int can be up to 4 bytes long.
+     *
+     * The first bit of the first 3 bytes
+     * is set if another byte follows.
+     *
+     * The integer value is the last 7 bits from
+     * the first 3 bytes and the 8 bits of the last byte
+     * (29 bits).
+     *
+     * The int is negative if the 1st bit of the 29 int is set.
+     */
+
+    /* Ignore 1st 3 bits of 32 bit int, since we're encoding to 29 bit. */
+    value &= 0x1fffffff;
+    if (value < 0x80) {
+        tmp_size = 1;
+        tmp[0] = value;
+    } else if (value < 0x4000) {
+        tmp_size = 2;
+        /* Shift bits by 7 to fill 1st byte and set next byte flag */
+        tmp[0] = (value >> 7 & 0x7f) | 0x80;
+        /* Shift bits by 7 to fill 2nd byte, leave next byte flag unset */
+        tmp[1] = value & 0x7f;
+    } else if (value < 0x200000) {
+        tmp_size = 3;
+        tmp[0] = (value >> 14 & 0x7f) | 0x80;
+        tmp[1] = (value >> 7 & 0x7f) | 0x80;
+        tmp[2] = value & 0x7f;
+    } else if (value < 0x40000000) {
+        tmp_size = 4;
+        tmp[0] = (value >> 22 & 0x7f) | 0x80;
+        tmp[1] = (value >> 15 & 0x7f) | 0x80;
+        /* Shift bits by 8, since we can use all bits in the 4th byte */
+        tmp[2] = (value >> 8 & 0x7f) | 0x80;
+        tmp[3] = (value & 0xff);
+    } else {
+      return LUAAMF_EFAILURE;
+    }
+  sb_write(sb, (unsigned char*)tmp, tmp_size);
+
+  return LUAAMF_ESUCCESS;
+}
+
+static int encode_string(luaamf_SaveBuffer *sb, const char *value, int len)
+{
+  sb_writechar(sb, STRING_AMF);
+  encode_int(sb, len * 2 + 1);
+  sb_write(sb, (unsigned char*)value, len);
+  return LUAAMF_ESUCCESS;
+}
+
+int luaamf_save(lua_State * L)
+{
+  int result = LUAAMF_EFAILURE;
+  luaamf_SaveBuffer sb;
 
   {
-  //  void * alloc_ud = NULL;
-  //  lua_Alloc alloc_fn = lua_getallocf(L, &alloc_ud);
-  //  lbsSB_init(&sb, alloc_fn, alloc_ud);
+    void * alloc_ud = NULL;
+    lua_Alloc alloc_fn = lua_getallocf(L, &alloc_ud);
+    sb_init(&sb, alloc_fn, alloc_ud);
   }
 
   switch (lua_type(L, 1))
   {
   case LUA_TNIL:
-    result = LUA_AMF_ESUCCESS;
-    sb = (char*) malloc(sizeof(char));
-    length = 1;
-    sb[0] = 1;
+    sb_writechar(&sb, NULL_AMF);
+    result = LUAAMF_ESUCCESS;
     break;
 
   case LUA_TBOOLEAN:
-    result = LUA_AMF_ESUCCESS;
-    sb = (char*) malloc(sizeof(char));
-    length = 1;
-    sb[0] = lua_toboolean(L, 1) ? 3 : 2;
+    sb_writechar(&sb, lua_toboolean(L, 1) ? TRUE_AMF : FALSE_AMF);
+    result = LUAAMF_ESUCCESS;
     break;
 
   case LUA_TNUMBER:
-    result = LUA_AMF_ESUCCESS;
-    sb = (char*) malloc(sizeof(char) * 9);
-    length = 9;
-    sb[0] = 5;
-    //lbs_writeNumber(sb, lua_tonumber(L, index));
+    result = encode_double(&sb, lua_tonumber(L, 1));
     break;
 
   case LUA_TSTRING:
     {
-      size_t len = 0;
+      size_t len;
       const char * buf = lua_tolstring(L, 1, &len);
-      result = LUA_AMF_ESUCCESS;
-      sb = (char*) malloc(sizeof(char) * sizeof(buf));
-      length = len + 2;
-      sb[0] = 6;
-      //result = lbs_writeString(sb, buf, len);
+      result = encode_string(&sb, buf, len);
+      break;
     }
-    break;
 
   case LUA_TTABLE:
   case LUA_TNONE:
@@ -63,48 +128,40 @@ int lua_amf_save(lua_State * L)
   case LUA_TTHREAD:
   case LUA_TUSERDATA:
   default:
-    result = LUA_AMF_EBADTYPE;
+    result = LUAAMF_EBADTYPE;
   }
 
-  if (result != LUA_AMF_ESUCCESS)
+  if (result != LUAAMF_ESUCCESS)
   {
     switch (result)
     {
-    case LUA_AMF_EBADTYPE:
+    case LUAAMF_EBADTYPE:
       lua_pushliteral(L, "can't save: unsupported type detected");
       break;
 
-    case LUA_AMF_ETOODEEP:
+    case LUAAMF_ETOODEEP:
       lua_pushliteral(L, "can't save: nesting is too deep");
       break;
 
-    case LUA_AMF_ETOOLONG:
+    case LUAAMF_ETOOLONG:
       lua_pushliteral(L, "can't save: not enough memory");
       break;
 
-    default: // Should not happen
+    default: /* Should not happen */
       lua_pushliteral(L, "save failed");
       break;
     }
 
-    //lbsSB_destroy(&sb);
-    free(sb);
+    sb_destroy(&sb);
 
     return result;
   }
-
   {
-   // size_t len = 0UL;
-   // const unsigned char * buf = lbsSB_buffer(&sb, &len);
-   // const unsigned char buf[] = "\x04";
-    int i;
-    for (i = 0; i < length; i ++) {
-      printf("\\%03d", sb[i]);
-    }
-    lua_pushlstring(L, (const char *)sb, length);
-   // lbsSB_destroy(&sb);
+    size_t len = 0UL;
+    const unsigned char * buf = sb_buffer(&sb, &len);
+    lua_pushlstring(L, (const char *)buf, len);
+    sb_destroy(&sb);
   }
-  free(sb);
 
-  return LUA_AMF_ESUCCESS;
+  return LUAAMF_ESUCCESS;
 }
