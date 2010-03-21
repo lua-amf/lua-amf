@@ -80,29 +80,36 @@ cleanlibs: cleanobjects
 	$(RM) $(LIBDIR)/$(SONAME)
 	$(RM) $(LIBDIR)/$(ANAME)
 
-$(LIBDIR)/$(SONAME): $(OBJDIR)/load.o $(OBJDIR)/luaamf.o $(OBJDIR)/save.o $(OBJDIR)/savebuffer.o
+$(LIBDIR)/$(SONAME): $(OBJDIR)/decode.o $(OBJDIR)/encode.o $(OBJDIR)/load.o $(OBJDIR)/luaamf.o $(OBJDIR)/save.o $(OBJDIR)/savebuffer.o
 	$(MKDIR) $(LIBDIR)
-	$(LD) -o $@ $(OBJDIR)/load.o $(OBJDIR)/luaamf.o $(OBJDIR)/save.o $(OBJDIR)/savebuffer.o $(LDFLAGS) $(SOFLAGS)
+	$(LD) -o $@ $(OBJDIR)/decode.o $(OBJDIR)/encode.o $(OBJDIR)/load.o $(OBJDIR)/luaamf.o $(OBJDIR)/save.o $(OBJDIR)/savebuffer.o $(LDFLAGS) $(SOFLAGS)
 
-$(LIBDIR)/$(ANAME): $(OBJDIR)/load.o $(OBJDIR)/luaamf.o $(OBJDIR)/save.o $(OBJDIR)/savebuffer.o
+$(LIBDIR)/$(ANAME): $(OBJDIR)/decode.o $(OBJDIR)/encode.o $(OBJDIR)/load.o $(OBJDIR)/luaamf.o $(OBJDIR)/save.o $(OBJDIR)/savebuffer.o
 	$(MKDIR) $(LIBDIR)
-	$(AR) $@ $(OBJDIR)/load.o $(OBJDIR)/luaamf.o $(OBJDIR)/save.o $(OBJDIR)/savebuffer.o
+	$(AR) $@ $(OBJDIR)/decode.o $(OBJDIR)/encode.o $(OBJDIR)/load.o $(OBJDIR)/luaamf.o $(OBJDIR)/save.o $(OBJDIR)/savebuffer.o
 	$(RANLIB) $@
 
 # objects:
 
 cleanobjects:
-	$(RM) $(OBJDIR)/load.o $(OBJDIR)/luaamf.o $(OBJDIR)/save.o $(OBJDIR)/savebuffer.o
+	$(RM) $(OBJDIR)/decode.o $(OBJDIR)/encode.o $(OBJDIR)/load.o $(OBJDIR)/luaamf.o $(OBJDIR)/save.o $(OBJDIR)/savebuffer.o
+
+$(OBJDIR)/decode.o: src/decode.c src/saveload.h
+	$(CC) $(CFLAGS)  -o $@ -c src/decode.c
+
+$(OBJDIR)/encode.o: src/encode.c src/luaheaders.h src/saveload.h \
+  src/savebuffer.h
+	$(CC) $(CFLAGS)  -o $@ -c src/encode.c
 
 $(OBJDIR)/load.o: src/load.c src/luaheaders.h src/luaamf.h \
-  src/saveload.h
+  src/saveload.h src/decode.h
 	$(CC) $(CFLAGS)  -o $@ -c src/load.c
 
 $(OBJDIR)/luaamf.o: src/luaamf.c src/luaheaders.h src/luaamf.h
 	$(CC) $(CFLAGS)  -o $@ -c src/luaamf.c
 
 $(OBJDIR)/save.o: src/save.c src/luaheaders.h src/luaamf.h \
-  src/saveload.h src/savebuffer.h
+  src/saveload.h src/savebuffer.h src/encode.h
 	$(CC) $(CFLAGS)  -o $@ -c src/save.c
 
 $(OBJDIR)/savebuffer.o: src/savebuffer.c src/luaheaders.h \
@@ -164,29 +171,36 @@ cleanlibsc89: cleanobjectsc89
 	$(RM) $(TMPDIR)/c89/$(SONAME)
 	$(RM) $(TMPDIR)/c89/$(ANAME)
 
-$(TMPDIR)/c89/$(SONAME): $(OBJDIR)/c89-load.o $(OBJDIR)/c89-luaamf.o $(OBJDIR)/c89-save.o $(OBJDIR)/c89-savebuffer.o
+$(TMPDIR)/c89/$(SONAME): $(OBJDIR)/c89-decode.o $(OBJDIR)/c89-encode.o $(OBJDIR)/c89-load.o $(OBJDIR)/c89-luaamf.o $(OBJDIR)/c89-save.o $(OBJDIR)/c89-savebuffer.o
 	$(MKDIR) $(TMPDIR)/c89
-	$(LD) -o $@ $(OBJDIR)/c89-load.o $(OBJDIR)/c89-luaamf.o $(OBJDIR)/c89-save.o $(OBJDIR)/c89-savebuffer.o $(LDFLAGS) $(SOFLAGS)
+	$(LD) -o $@ $(OBJDIR)/c89-decode.o $(OBJDIR)/c89-encode.o $(OBJDIR)/c89-load.o $(OBJDIR)/c89-luaamf.o $(OBJDIR)/c89-save.o $(OBJDIR)/c89-savebuffer.o $(LDFLAGS) $(SOFLAGS)
 
-$(TMPDIR)/c89/$(ANAME): $(OBJDIR)/c89-load.o $(OBJDIR)/c89-luaamf.o $(OBJDIR)/c89-save.o $(OBJDIR)/c89-savebuffer.o
+$(TMPDIR)/c89/$(ANAME): $(OBJDIR)/c89-decode.o $(OBJDIR)/c89-encode.o $(OBJDIR)/c89-load.o $(OBJDIR)/c89-luaamf.o $(OBJDIR)/c89-save.o $(OBJDIR)/c89-savebuffer.o
 	$(MKDIR) $(TMPDIR)/c89
-	$(AR) $@ $(OBJDIR)/c89-load.o $(OBJDIR)/c89-luaamf.o $(OBJDIR)/c89-save.o $(OBJDIR)/c89-savebuffer.o
+	$(AR) $@ $(OBJDIR)/c89-decode.o $(OBJDIR)/c89-encode.o $(OBJDIR)/c89-load.o $(OBJDIR)/c89-luaamf.o $(OBJDIR)/c89-save.o $(OBJDIR)/c89-savebuffer.o
 	$(RANLIB) $@
 
 # objectsc89:
 
 cleanobjectsc89:
-	$(RM) $(OBJDIR)/c89-load.o $(OBJDIR)/c89-luaamf.o $(OBJDIR)/c89-save.o $(OBJDIR)/c89-savebuffer.o
+	$(RM) $(OBJDIR)/c89-decode.o $(OBJDIR)/c89-encode.o $(OBJDIR)/c89-load.o $(OBJDIR)/c89-luaamf.o $(OBJDIR)/c89-save.o $(OBJDIR)/c89-savebuffer.o
+
+$(OBJDIR)/c89-decode.o: src/decode.c src/saveload.h
+	$(CC) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c -std=c89 -o $@ -c src/decode.c
+
+$(OBJDIR)/c89-encode.o: src/encode.c src/luaheaders.h src/saveload.h \
+  src/savebuffer.h
+	$(CC) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c -std=c89 -o $@ -c src/encode.c
 
 $(OBJDIR)/c89-load.o: src/load.c src/luaheaders.h src/luaamf.h \
-  src/saveload.h
+  src/saveload.h src/decode.h
 	$(CC) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c -std=c89 -o $@ -c src/load.c
 
 $(OBJDIR)/c89-luaamf.o: src/luaamf.c src/luaheaders.h src/luaamf.h
 	$(CC) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c -std=c89 -o $@ -c src/luaamf.c
 
 $(OBJDIR)/c89-save.o: src/save.c src/luaheaders.h src/luaamf.h \
-  src/saveload.h src/savebuffer.h
+  src/saveload.h src/savebuffer.h src/encode.h
 	$(CC) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c -std=c89 -o $@ -c src/save.c
 
 $(OBJDIR)/c89-savebuffer.o: src/savebuffer.c src/luaheaders.h \
@@ -237,29 +251,36 @@ cleanlibsc99: cleanobjectsc99
 	$(RM) $(TMPDIR)/c99/$(SONAME)
 	$(RM) $(TMPDIR)/c99/$(ANAME)
 
-$(TMPDIR)/c99/$(SONAME): $(OBJDIR)/c99-load.o $(OBJDIR)/c99-luaamf.o $(OBJDIR)/c99-save.o $(OBJDIR)/c99-savebuffer.o
+$(TMPDIR)/c99/$(SONAME): $(OBJDIR)/c99-decode.o $(OBJDIR)/c99-encode.o $(OBJDIR)/c99-load.o $(OBJDIR)/c99-luaamf.o $(OBJDIR)/c99-save.o $(OBJDIR)/c99-savebuffer.o
 	$(MKDIR) $(TMPDIR)/c99
-	$(LD) -o $@ $(OBJDIR)/c99-load.o $(OBJDIR)/c99-luaamf.o $(OBJDIR)/c99-save.o $(OBJDIR)/c99-savebuffer.o $(LDFLAGS) $(SOFLAGS)
+	$(LD) -o $@ $(OBJDIR)/c99-decode.o $(OBJDIR)/c99-encode.o $(OBJDIR)/c99-load.o $(OBJDIR)/c99-luaamf.o $(OBJDIR)/c99-save.o $(OBJDIR)/c99-savebuffer.o $(LDFLAGS) $(SOFLAGS)
 
-$(TMPDIR)/c99/$(ANAME): $(OBJDIR)/c99-load.o $(OBJDIR)/c99-luaamf.o $(OBJDIR)/c99-save.o $(OBJDIR)/c99-savebuffer.o
+$(TMPDIR)/c99/$(ANAME): $(OBJDIR)/c99-decode.o $(OBJDIR)/c99-encode.o $(OBJDIR)/c99-load.o $(OBJDIR)/c99-luaamf.o $(OBJDIR)/c99-save.o $(OBJDIR)/c99-savebuffer.o
 	$(MKDIR) $(TMPDIR)/c99
-	$(AR) $@ $(OBJDIR)/c99-load.o $(OBJDIR)/c99-luaamf.o $(OBJDIR)/c99-save.o $(OBJDIR)/c99-savebuffer.o
+	$(AR) $@ $(OBJDIR)/c99-decode.o $(OBJDIR)/c99-encode.o $(OBJDIR)/c99-load.o $(OBJDIR)/c99-luaamf.o $(OBJDIR)/c99-save.o $(OBJDIR)/c99-savebuffer.o
 	$(RANLIB) $@
 
 # objectsc99:
 
 cleanobjectsc99:
-	$(RM) $(OBJDIR)/c99-load.o $(OBJDIR)/c99-luaamf.o $(OBJDIR)/c99-save.o $(OBJDIR)/c99-savebuffer.o
+	$(RM) $(OBJDIR)/c99-decode.o $(OBJDIR)/c99-encode.o $(OBJDIR)/c99-load.o $(OBJDIR)/c99-luaamf.o $(OBJDIR)/c99-save.o $(OBJDIR)/c99-savebuffer.o
+
+$(OBJDIR)/c99-decode.o: src/decode.c src/saveload.h
+	$(CC) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c -std=c99 -o $@ -c src/decode.c
+
+$(OBJDIR)/c99-encode.o: src/encode.c src/luaheaders.h src/saveload.h \
+  src/savebuffer.h
+	$(CC) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c -std=c99 -o $@ -c src/encode.c
 
 $(OBJDIR)/c99-load.o: src/load.c src/luaheaders.h src/luaamf.h \
-  src/saveload.h
+  src/saveload.h src/decode.h
 	$(CC) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c -std=c99 -o $@ -c src/load.c
 
 $(OBJDIR)/c99-luaamf.o: src/luaamf.c src/luaheaders.h src/luaamf.h
 	$(CC) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c -std=c99 -o $@ -c src/luaamf.c
 
 $(OBJDIR)/c99-save.o: src/save.c src/luaheaders.h src/luaamf.h \
-  src/saveload.h src/savebuffer.h
+  src/saveload.h src/savebuffer.h src/encode.h
 	$(CC) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c -std=c99 -o $@ -c src/save.c
 
 $(OBJDIR)/c99-savebuffer.o: src/savebuffer.c src/luaheaders.h \
@@ -310,29 +331,36 @@ cleanlibsc++98: cleanobjectsc++98
 	$(RM) $(TMPDIR)/c++98/$(SONAME)
 	$(RM) $(TMPDIR)/c++98/$(ANAME)
 
-$(TMPDIR)/c++98/$(SONAME): $(OBJDIR)/c++98-load.o $(OBJDIR)/c++98-luaamf.o $(OBJDIR)/c++98-save.o $(OBJDIR)/c++98-savebuffer.o
+$(TMPDIR)/c++98/$(SONAME): $(OBJDIR)/c++98-decode.o $(OBJDIR)/c++98-encode.o $(OBJDIR)/c++98-load.o $(OBJDIR)/c++98-luaamf.o $(OBJDIR)/c++98-save.o $(OBJDIR)/c++98-savebuffer.o
 	$(MKDIR) $(TMPDIR)/c++98
-	$(LDXX) -o $@ $(OBJDIR)/c++98-load.o $(OBJDIR)/c++98-luaamf.o $(OBJDIR)/c++98-save.o $(OBJDIR)/c++98-savebuffer.o $(LDFLAGS) $(SOFLAGS)
+	$(LDXX) -o $@ $(OBJDIR)/c++98-decode.o $(OBJDIR)/c++98-encode.o $(OBJDIR)/c++98-load.o $(OBJDIR)/c++98-luaamf.o $(OBJDIR)/c++98-save.o $(OBJDIR)/c++98-savebuffer.o $(LDFLAGS) $(SOFLAGS)
 
-$(TMPDIR)/c++98/$(ANAME): $(OBJDIR)/c++98-load.o $(OBJDIR)/c++98-luaamf.o $(OBJDIR)/c++98-save.o $(OBJDIR)/c++98-savebuffer.o
+$(TMPDIR)/c++98/$(ANAME): $(OBJDIR)/c++98-decode.o $(OBJDIR)/c++98-encode.o $(OBJDIR)/c++98-load.o $(OBJDIR)/c++98-luaamf.o $(OBJDIR)/c++98-save.o $(OBJDIR)/c++98-savebuffer.o
 	$(MKDIR) $(TMPDIR)/c++98
-	$(AR) $@ $(OBJDIR)/c++98-load.o $(OBJDIR)/c++98-luaamf.o $(OBJDIR)/c++98-save.o $(OBJDIR)/c++98-savebuffer.o
+	$(AR) $@ $(OBJDIR)/c++98-decode.o $(OBJDIR)/c++98-encode.o $(OBJDIR)/c++98-load.o $(OBJDIR)/c++98-luaamf.o $(OBJDIR)/c++98-save.o $(OBJDIR)/c++98-savebuffer.o
 	$(RANLIB) $@
 
 # objectsc++98:
 
 cleanobjectsc++98:
-	$(RM) $(OBJDIR)/c++98-load.o $(OBJDIR)/c++98-luaamf.o $(OBJDIR)/c++98-save.o $(OBJDIR)/c++98-savebuffer.o
+	$(RM) $(OBJDIR)/c++98-decode.o $(OBJDIR)/c++98-encode.o $(OBJDIR)/c++98-load.o $(OBJDIR)/c++98-luaamf.o $(OBJDIR)/c++98-save.o $(OBJDIR)/c++98-savebuffer.o
+
+$(OBJDIR)/c++98-decode.o: src/decode.c src/saveload.h
+	$(CXX) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c++ -std=c++98 -o $@ -c src/decode.c
+
+$(OBJDIR)/c++98-encode.o: src/encode.c src/luaheaders.h src/saveload.h \
+  src/savebuffer.h
+	$(CXX) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c++ -std=c++98 -o $@ -c src/encode.c
 
 $(OBJDIR)/c++98-load.o: src/load.c src/luaheaders.h src/luaamf.h \
-  src/saveload.h
+  src/saveload.h src/decode.h
 	$(CXX) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c++ -std=c++98 -o $@ -c src/load.c
 
 $(OBJDIR)/c++98-luaamf.o: src/luaamf.c src/luaheaders.h src/luaamf.h
 	$(CXX) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c++ -std=c++98 -o $@ -c src/luaamf.c
 
 $(OBJDIR)/c++98-save.o: src/save.c src/luaheaders.h src/luaamf.h \
-  src/saveload.h src/savebuffer.h
+  src/saveload.h src/savebuffer.h src/encode.h
 	$(CXX) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c++ -std=c++98 -o $@ -c src/save.c
 
 $(OBJDIR)/c++98-savebuffer.o: src/savebuffer.c src/luaheaders.h \
