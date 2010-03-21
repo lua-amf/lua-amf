@@ -41,20 +41,20 @@ static int decode_double(const unsigned char *byte_ref, double *val)
     /* Put bytes from byte array into double */
     union aligned {
         double d_val;
-        char c_val[8];
+        char string[8];
     } d;
 
     if (!byte_ref) return LUAAMF_EBADDATA;
 
     /* Flip */
-    d.c_val[0] = byte_ref[7];
-    d.c_val[1] = byte_ref[6];
-    d.c_val[2] = byte_ref[5];
-    d.c_val[3] = byte_ref[4];
-    d.c_val[4] = byte_ref[3];
-    d.c_val[5] = byte_ref[2];
-    d.c_val[6] = byte_ref[1];
-    d.c_val[7] = byte_ref[0];
+    d.string[0] = byte_ref[7];
+    d.string[1] = byte_ref[6];
+    d.string[2] = byte_ref[5];
+    d.string[3] = byte_ref[4];
+    d.string[4] = byte_ref[3];
+    d.string[5] = byte_ref[2];
+    d.string[6] = byte_ref[1];
+    d.string[7] = byte_ref[0];
 
     *val = d.d_val;
     return LUAAMF_ESUCCESS;
@@ -138,9 +138,9 @@ int luaamf_load(
 
   case LUAAMF_INT_AMF:
     {
-      int c_value;
+      int curr_value;
       lua_Number value;
-      result = decode_int(ls.pos, &c_value);
+      result = decode_int(ls.pos, &curr_value);
       value = c_value;
       if (result == LUAAMF_ESUCCESS)
       {
