@@ -1,6 +1,6 @@
 /*
 * luaamf.c: Lua-AMF Lua module code
-* Copyright (c) 2010, lua-noise authors
+* Copyright (c) 2010, lua-amf authors
 * See copyright information in the COPYRIGHT file
 */
 

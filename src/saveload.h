@@ -1,6 +1,6 @@
 /*
 * saveload.h: Lua-AMF internal constants
-* Copyright (c) 2010, lua-noise authors
+* Copyright (c) 2010, lua-amf authors
 * See copyright information in the COPYRIGHT file
 */
 
