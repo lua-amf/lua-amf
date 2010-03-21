@@ -134,8 +134,8 @@ int luaamf_load(
   
     case LUAAMF_STRING_AMF:
       {    
-        int value = 0;
-        int byte_cnt = 0;
+        unsigned int value = 0;
+        unsigned int byte_cnt = 0;
         char byte;
         if (ls.pos == NULL) return LUAAMF_EBADDATA;
         byte = ls.pos[0];
