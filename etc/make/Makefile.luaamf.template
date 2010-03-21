@@ -1,4 +1,4 @@
-@{define:projectname:luabins}
+@{define:projectname:luaamf}
 @{define:test-dir:test/}
 @{define:source-dir:src/}
 @{define:sharedlib:$(LIBDIR)/$(SONAME)}
@@ -80,14 +80,14 @@ LIBDIR := ./lib
 HFILE  := $(INCDIR)/$(HNAME)
 
 CFLAGS  += -O2 -Wall -I$(LUA_INCDIR)
-LDFLAGS += -L$(LUA_LIBDIR)
+LDFLAGS += -L$(LUA_LIBDIR) -llua
 
 # Tested on OS X and Ubuntu
 SOFLAGS :=
 ifeq ($(shell uname),Darwin)
   SOFLAGS += -dynamiclib -undefined dynamic_lookup
 else
-  CFLAGS += -fPIC
+#  CFLAGS += -fPIC
   SOFLAGS += -shared
   LDFLAGS += -ldl
   RMDIR := rm -rf

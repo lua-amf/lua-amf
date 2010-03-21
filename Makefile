@@ -6,7 +6,6 @@ ifeq ($(shell uname),Darwin)
   LUA_INCDIR := $(LUA_DIR)/include
   LUALIB := lua
 else
-# ifeq ($(shell uname),CYGWIN_NT-6.1)
   # Assuming Ubuntu
   LUA_LIBDIR := /usr/lib
   LUA_INCDIR := /usr/include/lua5.1
@@ -159,7 +158,7 @@ cleantestc89: cleanlibsc89 resettestc89 \
 # testobjectsc89:
 
 cleantestobjectsc89:
-	$(RM)
+	$(RM) 
 
 cleanlibsc89: cleanobjectsc89
 	$(RM) $(TMPDIR)/c89/$(SONAME)
@@ -232,7 +231,7 @@ cleantestc99: cleanlibsc99 resettestc99 \
 # testobjectsc99:
 
 cleantestobjectsc99:
-	$(RM)
+	$(RM) 
 
 cleanlibsc99: cleanobjectsc99
 	$(RM) $(TMPDIR)/c99/$(SONAME)
@@ -305,7 +304,7 @@ cleantestc++98: cleanlibsc++98 resettestc++98 \
 # testobjectsc++98:
 
 cleantestobjectsc++98:
-	$(RM)
+	$(RM) 
 
 cleanlibsc++98: cleanobjectsc++98
 	$(RM) $(TMPDIR)/c++98/$(SONAME)

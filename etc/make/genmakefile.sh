@@ -1,2 +1,2 @@
 #! /bin/bash
-lua ~/genmakefile/src/genmakefile.lua <Makefile.luabins.template >Makefile
+lua ~/genmakefile/src/genmakefile.lua <etc/make/Makefile.luaamf.template >Makefile
