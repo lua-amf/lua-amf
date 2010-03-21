@@ -124,19 +124,19 @@ int luaamf_load(
 
   switch (type)
   {
-  case NULL_AMF:
+  case LUAAMF_NULL_AMF:
     lua_pushnil(L);
     break;
 
-  case FALSE_AMF:
+  case LUAAMF_FALSE_AMF:
     lua_pushboolean(L, 0);
     break;
 
-  case TRUE_AMF:
+  case LUAAMF_TRUE_AMF:
     lua_pushboolean(L, 1);
     break;
 
-  case INT_AMF:
+  case LUAAMF_INT_AMF:
     {
       int c_value;
       lua_Number value;
@@ -149,7 +149,7 @@ int luaamf_load(
     }
     break;
 
-  case DOUBLE_AMF:
+  case LUAAMF_DOUBLE_AMF:
     {
       double c_value;
       lua_Number value;
@@ -162,7 +162,7 @@ int luaamf_load(
     }
     break;
 
-  case STRING_AMF:
+  case LUAAMF_STRING_AMF:
     {
       int offset = ls.unread > 256 ? 2 : 1;
       /* TODO: think of long strings and bit masks */

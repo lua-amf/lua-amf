@@ -23,7 +23,7 @@ static int encode_double(luaamf_SaveBuffer *sb, double value)
    {
      int i;
      unsigned char context[9];
-     context[0] = DOUBLE_AMF;
+     context[0] = LUAAMF_DOUBLE_AMF;
      for(i = 1; i <= 8; i++) { context[i] = char_value[8 - i]; }
      sb_write(sb, context, 9);
    }
@@ -81,7 +81,7 @@ static int encode_int(luaamf_SaveBuffer *sb, int value)
 
 static int encode_string(luaamf_SaveBuffer *sb, const char *value, int len)
 {
-  sb_writechar(sb, STRING_AMF);
+  sb_writechar(sb, LUAAMF_STRING_AMF);
   encode_int(sb, len * 2 + 1);
   sb_write(sb, (unsigned char*)value, len);
   return LUAAMF_ESUCCESS;
@@ -101,12 +101,12 @@ int luaamf_save(lua_State * L)
   switch (lua_type(L, 1))
   {
   case LUA_TNIL:
-    sb_writechar(&sb, NULL_AMF);
+    sb_writechar(&sb, LUAAMF_NULL_AMF);
     result = LUAAMF_ESUCCESS;
     break;
 
   case LUA_TBOOLEAN:
-    sb_writechar(&sb, lua_toboolean(L, 1) ? TRUE_AMF : FALSE_AMF);
+    sb_writechar(&sb, lua_toboolean(L, 1) ? LUAAMF_TRUE_AMF : LUAAMF_FALSE_AMF);
     result = LUAAMF_ESUCCESS;
     break;
 
