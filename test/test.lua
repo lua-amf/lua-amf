@@ -10,7 +10,7 @@ assert(luaamf_local == luaamf)
 assert(type(luaamf.save) == "function")
 assert(type(luaamf.load) == "function")
 
-test_data = dofile('etc/generator/data.lua')
+test_data = dofile('test/test_data.lua')
 
 --local make_suite = assert(loadfile('../../lua-nucleo/test/test-lib/init/strict.lua'))(...)
 --local test = make_suite("algorithm", algorithm_exports)

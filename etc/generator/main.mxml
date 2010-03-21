@@ -74,7 +74,7 @@
       }
 
       private function btn_click(evt:MouseEvent):void {
-        fileReference.save(textArea.text, "describeType.txt");
+        fileReference.save(textArea.text, "test_data.lua");
       }
     ]]>
   </fx:Script>
