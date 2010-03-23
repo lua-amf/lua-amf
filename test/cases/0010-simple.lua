@@ -10,14 +10,9 @@ dofile('lua-nucleo/import.lua')
 
 local make_suite = select(1, ...)
 assert(type(make_suite) == "function")
-
-assert(luaamf_local == luaamf)
-assert(type(luaamf.save) == "function")
-assert(type(luaamf.load) == "function")
-
-local test_data = dofile('test/data/AMF_generated.lua')
-
 local test = make_suite("luaamf", { })
+
+local test_data = assert(dofile('test/data/AMF_generated.lua'))
 
 -- Utility functions
 
@@ -112,6 +107,12 @@ local check_fail_load = function(msg, v)
 end
 
 -- Basic tests
+
+test "correct load" (function()
+  assert(luaamf_local == luaamf)
+  assert(type(luaamf.save) == "function")
+  assert(type(luaamf.load) == "function")
+end)
 
 test "generated_data" (function()
   local loaded = {}
