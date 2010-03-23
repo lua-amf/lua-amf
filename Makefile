@@ -94,11 +94,11 @@ $(LIBDIR)/$(ANAME): $(OBJDIR)/decode.o $(OBJDIR)/encode.o $(OBJDIR)/load.o $(OBJ
 cleanobjects:
 	$(RM) $(OBJDIR)/decode.o $(OBJDIR)/encode.o $(OBJDIR)/load.o $(OBJDIR)/luaamf.o $(OBJDIR)/save.o $(OBJDIR)/savebuffer.o
 
-$(OBJDIR)/decode.o: src/decode.c src/saveload.h
+$(OBJDIR)/decode.o: src/decode.c src/saveload.h src/decode.h
 	$(CC) $(CFLAGS)  -o $@ -c src/decode.c
 
 $(OBJDIR)/encode.o: src/encode.c src/luaheaders.h src/saveload.h \
-  src/savebuffer.h
+  src/savebuffer.h src/encode.h
 	$(CC) $(CFLAGS)  -o $@ -c src/encode.c
 
 $(OBJDIR)/load.o: src/load.c src/luaheaders.h src/luaamf.h \
@@ -149,9 +149,9 @@ $(TMPDIR)/c89/.ctestspassed: $(TMPDIR)/c89/$(TESTNAME) test/$(TESTLUA)
 	$(TOUCH) $(TMPDIR)/c89/.ctestspassed
 	$(ECHO) "===== C tests for c89 PASSED ====="
 
-$(TMPDIR)/c89/$(TESTNAME):  $(TMPDIR)/c89/$(ANAME)
+$(TMPDIR)/c89/$(TESTNAME): $(OBJDIR)/c89-test.o $(TMPDIR)/c89/$(ANAME)
 	$(MKDIR) $(TMPDIR)/c89
-	$(LD) -o $@  $(LDFLAGS) -lm -l$(LUALIB) -l$(PROJECTNAME) -L$(TMPDIR)/c89
+	$(LD) -o $@ $(OBJDIR)/c89-test.o $(LDFLAGS) -lm -l$(LUALIB) -l$(PROJECTNAME) -L$(TMPDIR)/c89
 
 resettestc89:
 	$(RM) $(TMPDIR)/c89/.luatestspassed
@@ -165,7 +165,10 @@ cleantestc89: cleanlibsc89 resettestc89 \
 # testobjectsc89:
 
 cleantestobjectsc89:
-	$(RM) 
+	$(RM) $(OBJDIR)/c89-test.o
+
+$(OBJDIR)/c89-test.o: test/test.c test/test.h
+	$(CC) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c -std=c89 -Isrc/ -o $@ -c test/test.c
 
 cleanlibsc89: cleanobjectsc89
 	$(RM) $(TMPDIR)/c89/$(SONAME)
@@ -185,11 +188,11 @@ $(TMPDIR)/c89/$(ANAME): $(OBJDIR)/c89-decode.o $(OBJDIR)/c89-encode.o $(OBJDIR)/
 cleanobjectsc89:
 	$(RM) $(OBJDIR)/c89-decode.o $(OBJDIR)/c89-encode.o $(OBJDIR)/c89-load.o $(OBJDIR)/c89-luaamf.o $(OBJDIR)/c89-save.o $(OBJDIR)/c89-savebuffer.o
 
-$(OBJDIR)/c89-decode.o: src/decode.c src/saveload.h
+$(OBJDIR)/c89-decode.o: src/decode.c src/saveload.h src/decode.h
 	$(CC) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c -std=c89 -o $@ -c src/decode.c
 
 $(OBJDIR)/c89-encode.o: src/encode.c src/luaheaders.h src/saveload.h \
-  src/savebuffer.h
+  src/savebuffer.h src/encode.h
 	$(CC) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c -std=c89 -o $@ -c src/encode.c
 
 $(OBJDIR)/c89-load.o: src/load.c src/luaheaders.h src/luaamf.h \
@@ -229,9 +232,9 @@ $(TMPDIR)/c99/.ctestspassed: $(TMPDIR)/c99/$(TESTNAME) test/$(TESTLUA)
 	$(TOUCH) $(TMPDIR)/c99/.ctestspassed
 	$(ECHO) "===== C tests for c99 PASSED ====="
 
-$(TMPDIR)/c99/$(TESTNAME):  $(TMPDIR)/c99/$(ANAME)
+$(TMPDIR)/c99/$(TESTNAME): $(OBJDIR)/c99-test.o $(TMPDIR)/c99/$(ANAME)
 	$(MKDIR) $(TMPDIR)/c99
-	$(LD) -o $@  $(LDFLAGS) -lm -l$(LUALIB) -l$(PROJECTNAME) -L$(TMPDIR)/c99
+	$(LD) -o $@ $(OBJDIR)/c99-test.o $(LDFLAGS) -lm -l$(LUALIB) -l$(PROJECTNAME) -L$(TMPDIR)/c99
 
 resettestc99:
 	$(RM) $(TMPDIR)/c99/.luatestspassed
@@ -245,7 +248,10 @@ cleantestc99: cleanlibsc99 resettestc99 \
 # testobjectsc99:
 
 cleantestobjectsc99:
-	$(RM) 
+	$(RM) $(OBJDIR)/c99-test.o
+
+$(OBJDIR)/c99-test.o: test/test.c test/test.h
+	$(CC) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c -std=c99 -Isrc/ -o $@ -c test/test.c
 
 cleanlibsc99: cleanobjectsc99
 	$(RM) $(TMPDIR)/c99/$(SONAME)
@@ -265,11 +271,11 @@ $(TMPDIR)/c99/$(ANAME): $(OBJDIR)/c99-decode.o $(OBJDIR)/c99-encode.o $(OBJDIR)/
 cleanobjectsc99:
 	$(RM) $(OBJDIR)/c99-decode.o $(OBJDIR)/c99-encode.o $(OBJDIR)/c99-load.o $(OBJDIR)/c99-luaamf.o $(OBJDIR)/c99-save.o $(OBJDIR)/c99-savebuffer.o
 
-$(OBJDIR)/c99-decode.o: src/decode.c src/saveload.h
+$(OBJDIR)/c99-decode.o: src/decode.c src/saveload.h src/decode.h
 	$(CC) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c -std=c99 -o $@ -c src/decode.c
 
 $(OBJDIR)/c99-encode.o: src/encode.c src/luaheaders.h src/saveload.h \
-  src/savebuffer.h
+  src/savebuffer.h src/encode.h
 	$(CC) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c -std=c99 -o $@ -c src/encode.c
 
 $(OBJDIR)/c99-load.o: src/load.c src/luaheaders.h src/luaamf.h \
@@ -309,9 +315,9 @@ $(TMPDIR)/c++98/.ctestspassed: $(TMPDIR)/c++98/$(TESTNAME) test/$(TESTLUA)
 	$(TOUCH) $(TMPDIR)/c++98/.ctestspassed
 	$(ECHO) "===== C tests for c++98 PASSED ====="
 
-$(TMPDIR)/c++98/$(TESTNAME):  $(TMPDIR)/c++98/$(ANAME)
+$(TMPDIR)/c++98/$(TESTNAME): $(OBJDIR)/c++98-test.o $(TMPDIR)/c++98/$(ANAME)
 	$(MKDIR) $(TMPDIR)/c++98
-	$(LDXX) -o $@  $(LDFLAGS) -lm -l$(LUALIB) -l$(PROJECTNAME) -L$(TMPDIR)/c++98
+	$(LDXX) -o $@ $(OBJDIR)/c++98-test.o $(LDFLAGS) -lm -l$(LUALIB) -l$(PROJECTNAME) -L$(TMPDIR)/c++98
 
 resettestc++98:
 	$(RM) $(TMPDIR)/c++98/.luatestspassed
@@ -325,7 +331,10 @@ cleantestc++98: cleanlibsc++98 resettestc++98 \
 # testobjectsc++98:
 
 cleantestobjectsc++98:
-	$(RM) 
+	$(RM) $(OBJDIR)/c++98-test.o
+
+$(OBJDIR)/c++98-test.o: test/test.c test/test.h
+	$(CXX) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c++ -std=c++98 -Isrc/ -o $@ -c test/test.c
 
 cleanlibsc++98: cleanobjectsc++98
 	$(RM) $(TMPDIR)/c++98/$(SONAME)
@@ -345,11 +354,11 @@ $(TMPDIR)/c++98/$(ANAME): $(OBJDIR)/c++98-decode.o $(OBJDIR)/c++98-encode.o $(OB
 cleanobjectsc++98:
 	$(RM) $(OBJDIR)/c++98-decode.o $(OBJDIR)/c++98-encode.o $(OBJDIR)/c++98-load.o $(OBJDIR)/c++98-luaamf.o $(OBJDIR)/c++98-save.o $(OBJDIR)/c++98-savebuffer.o
 
-$(OBJDIR)/c++98-decode.o: src/decode.c src/saveload.h
+$(OBJDIR)/c++98-decode.o: src/decode.c src/saveload.h src/decode.h
 	$(CXX) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c++ -std=c++98 -o $@ -c src/decode.c
 
 $(OBJDIR)/c++98-encode.o: src/encode.c src/luaheaders.h src/saveload.h \
-  src/savebuffer.h
+  src/savebuffer.h src/encode.h
 	$(CXX) $(CFLAGS) -Werror -Wall -Wextra -pedantic -x c++ -std=c++98 -o $@ -c src/encode.c
 
 $(OBJDIR)/c++98-load.o: src/load.c src/luaheaders.h src/luaamf.h \
