@@ -27,7 +27,14 @@
         var byteArray:ByteArray = new ByteArray()
         byteArray.writeObject(obj)
         var str_curr:String = new String()
-        str_curr = str_curr.concat("  [\"", obj, "\"] = \"", add_binary(byteArray), "\";\n")
+        var obj_string:String = new String()
+        obj_string = obj_string.concat(obj)
+        var myPattern:RegExp = /\x00/g;
+        str_curr = str_curr.concat
+          (
+            "  [\"", obj_string.replace(myPattern, "\\x00"), "\"] = \"",
+            add_binary(byteArray), "\";\n"
+          )
         return str_curr
       }
 
