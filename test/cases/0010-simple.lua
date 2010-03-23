@@ -3,12 +3,12 @@
 -- Copyright (c) lua-amf authors (see file `COPYRIGHT` for the license)
 
 package.cpath = "../lib/?.so;lib/?.so;"
-local luaamf_local = require('luaamf')
-
-local print, require, assert = print, require, assert
 
 assert(pcall(dofile, 'lua-nucleo/strict.lua'), "lua-nucleo not found.")
 dofile('lua-nucleo/import.lua')
+
+local luaamf_local = require('luaamf')
+local print, require, assert = print, require, assert
 
 local make_suite = select(1, ...)
 assert(type(make_suite) == "function")
