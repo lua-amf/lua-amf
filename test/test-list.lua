@@ -3,5 +3,5 @@
 
 return
 {
-  'simple';
+  '0010-simple';
 }
