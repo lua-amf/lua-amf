@@ -1,6 +1,6 @@
 -- test.lua: tests for all modules of the library
--- This file is a part of lua-nucleo library
--- Copyright (c) lua-nucleo authors (see file `COPYRIGHT` for the license)
+-- This file is a part of lua-amf library
+-- Copyright (c) lua-amf authors (see file `COPYRIGHT` for the license)
 
 local run_tests = assert(
     assert(

@@ -1,4 +1,6 @@
--- test.lua: Lua-amf test suite
+-- 0010-simple.lua: Lua-amf test suite
+-- This file is a part of lua-amf library
+-- Copyright (c) lua-amf authors (see file `COPYRIGHT` for the license)
 
 package.cpath = "../lib/?.so;lib/?.so;"
 local luaamf_local = require('luaamf')
