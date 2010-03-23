@@ -12,7 +12,9 @@
 *.kdevelop
 *.kdevses
 /Doxyfile
+/lua-nucleo
 
 *.so
 *.o
 *.a
+*.luatestspassed
