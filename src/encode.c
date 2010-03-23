@@ -1,6 +1,6 @@
 /*
 * encode.c: Lua-AMF Lua module code
-* Copyright (c) 2010, lua-amf authors
+* Code quoted from MIT-licensed AmFast 0.5.0 internals
 * See copyright information in the COPYRIGHT file
 */
 
