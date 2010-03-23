@@ -14,7 +14,8 @@
 /Doxyfile
 /lua-nucleo
 
-*.so
-*.o
-*.a
-*.luatestspassed
+/bin/
+/include/
+/lib/
+/obj/
+/tmp/
