@@ -24,12 +24,12 @@ int luaamf_save(lua_State * L)
   switch (lua_type(L, 1))
   {
   case LUA_TNIL:
-    sb_writechar(&sb, LUAAMF_NULL_AMF);
+    sb_writechar(&sb, LUAAMF_NULL);
     result = LUAAMF_ESUCCESS;
     break;
 
   case LUA_TBOOLEAN:
-    sb_writechar(&sb, lua_toboolean(L, 1) ? LUAAMF_TRUE_AMF : LUAAMF_FALSE_AMF);
+    sb_writechar(&sb, lua_toboolean(L, 1) ? LUAAMF_TRUE : LUAAMF_FALSE);
     result = LUAAMF_ESUCCESS;
     break;
 

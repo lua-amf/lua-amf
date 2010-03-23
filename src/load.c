@@ -65,7 +65,7 @@ int luaamf_load(
     type = ls_readbyte(&ls);
     switch (type)
     {
-    case LUAAMF_NULL_AMF:
+    case LUAAMF_NULL:
       if(len >= 2)
       {
         result = LUAAMF_ETAILEFT;
@@ -75,7 +75,7 @@ int luaamf_load(
       result = LUAAMF_ESUCCESS;
       break;
   
-    case LUAAMF_FALSE_AMF:
+    case LUAAMF_FALSE:
       if(len >= 2)
       {
         result = LUAAMF_ETAILEFT;
@@ -85,7 +85,7 @@ int luaamf_load(
       result = LUAAMF_ESUCCESS;     
       break;
   
-    case LUAAMF_TRUE_AMF:
+    case LUAAMF_TRUE:
       if(len >= 2)
       {
         result = LUAAMF_ETAILEFT;
@@ -95,7 +95,7 @@ int luaamf_load(
       result = LUAAMF_ESUCCESS;   
       break;
   
-    case LUAAMF_INT_AMF:
+    case LUAAMF_INT:
       if(len > 5)
       {
         result = LUAAMF_ETAILEFT;
@@ -113,7 +113,7 @@ int luaamf_load(
       }
       break;
   
-    case LUAAMF_DOUBLE_AMF:
+    case LUAAMF_DOUBLE:
       if(len > 9)
       {
         result = LUAAMF_ETAILEFT;
@@ -132,7 +132,7 @@ int luaamf_load(
       }
       break;
   
-    case LUAAMF_STRING_AMF:
+    case LUAAMF_STRING:
       {    
         unsigned int value = 0;
         unsigned int byte_cnt = 0;

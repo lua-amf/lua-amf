@@ -23,7 +23,7 @@ int encode_double(luaamf_SaveBuffer *sb, double value)
    {
      int i;
      unsigned char context[9];
-     context[0] = LUAAMF_DOUBLE_AMF;
+     context[0] = LUAAMF_DOUBLE;
      for(i = 1; i <= 8; i++) { context[i] = char_value[8 - i]; }
      sb_write(sb, context, 9);
    }
@@ -81,7 +81,7 @@ int encode_int(luaamf_SaveBuffer *sb, int value)
 
 int encode_string(luaamf_SaveBuffer *sb, const char *value, int len)
 {
-  sb_writechar(sb, LUAAMF_STRING_AMF);
+  sb_writechar(sb, LUAAMF_STRING);
   encode_int(sb, len * 2 + 1);
   sb_write(sb, (unsigned char*)value, len);
   return LUAAMF_ESUCCESS;
