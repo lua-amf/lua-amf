@@ -126,7 +126,6 @@ test "generated_data" (function()
   end
 end)
 
-
 test "basic_corrupt_data" (function()
   check_fail_load("can't load: corrupt data", "")
   check_fail_load("can't load: bad data type", "000")
@@ -178,6 +177,41 @@ test "basic_type_tests" (function()
   check_ok(("longstring"):rep(1024000))
 
   check_fail_save("can't save: unsupported type detected", function() end)
+end)
+
+test "simple_array_check" (function()
+  --[[
+  \009
+  \007 3+3+1
+       \007 \111\110\101 one
+  \006 \021 \102\105\114\115\116\032\104\101\114\101 first here
+       \007 \116\119\111 two
+  \006 \023 \115\101\099\111\110\100\032\104\101\114\101 second here
+       \011 \116\104\114\101\101 three
+  \006 \021 \116\104\105\114\100\032\104\101\114\101 third here
+  \001
+  \006 \011 \102\105\114\115\116 one
+  \006 \013 \115\101\099\111\110\100 two
+  \006 \011 \116\104\105\114\100 three
+  ]]
+  local res, err = luaamf.save({
+    one = "first here",
+    two = "second here",
+    three = "third here",
+    "first",
+    "second",
+    "third"})
+  if err then error(err) else
+    ensure_equals(
+        "array",
+        res,
+        "\009\007\007\111\110\101\006\021\102\105\114\115\116\032\104\101\114"
+     .. "\101\011\116\104\114\101\101\006\021\116\104\105\114\100\032\104\101"
+     .. "\114\101\007\116\119\111\006\023\115\101\099\111\110\100\032\104\101"
+     .. "\114\101\001\006\011\102\105\114\115\116\006\013\115\101\099\111\110"
+     .. "\100\006\011\116\104\105\114\100"
+      )
+  end
 end)
 
 test:run()
