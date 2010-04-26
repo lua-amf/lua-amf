@@ -1,6 +1,6 @@
 /*
 * savebuffer.h: Lua-AMF save buffer
-* Copyright (c) 2010, lua-amf authors
+* Code quoted from MIT-licensed luabins v0.2
 * See copyright information in the COPYRIGHT file
 */
 
