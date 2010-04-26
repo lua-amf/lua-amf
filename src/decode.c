@@ -9,7 +9,7 @@
 
 /* Decode a double to a native C double. */
 /* Pass in reference, so we can detect an buffer error. */
-int decode_double(const unsigned char *byte_ref, double *val)
+int decode_double(const unsigned char * byte_ref, double * val)
 {
   /* Put bytes from byte array into double */
   union aligned
@@ -33,12 +33,12 @@ int decode_double(const unsigned char *byte_ref, double *val)
   d.string[6] = byte_ref[1];
   d.string[7] = byte_ref[0];
 
-  *val = d.d_val;
+  * val = d.d_val;
   return LUAAMF_ESUCCESS;
 }
 
 /* Decode an int to a native C int. */
-int decode_int(const unsigned char *byte_ref, int *val)
+int decode_int(const unsigned char * byte_ref, int * val)
 {
   int result = 0;
   int byte_cnt = 0;
@@ -79,6 +79,6 @@ int decode_int(const unsigned char *byte_ref, int *val)
     result -= 0x20000000;
   }
 
-  *val = result;
+  * val = result;
   return  LUAAMF_ESUCCESS;
 }

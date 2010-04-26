@@ -9,7 +9,7 @@
 #include "savebuffer.h"
 #include "encode.h"
 
-int encode_double(luaamf_SaveBuffer *sb, double value)
+int encode_double(luaamf_SaveBuffer * sb, double value)
 {
   /* Put bytes from double into byte array */
   union aligned /* use the same memory for d_value and c_value */
@@ -17,7 +17,7 @@ int encode_double(luaamf_SaveBuffer *sb, double value)
     double d_value;
     char c_value[8];
   } d_aligned;
-  char *char_value = d_aligned.c_value;
+  char * char_value = d_aligned.c_value;
   d_aligned.d_value = value;
 
   /* Flip */
@@ -34,7 +34,7 @@ int encode_double(luaamf_SaveBuffer *sb, double value)
   return LUAAMF_ESUCCESS;
 }
 
-int encode_int(luaamf_SaveBuffer *sb, int value)
+int encode_int(luaamf_SaveBuffer * sb, int value)
 {
   char tmp[4];
   size_t tmp_size;
@@ -87,14 +87,14 @@ int encode_int(luaamf_SaveBuffer *sb, int value)
   {
     return LUAAMF_EFAILURE;
   }
-  sb_write(sb, (unsigned char*)tmp, tmp_size);
+  sb_write(sb, (unsigned char *)tmp, tmp_size);
 
   return LUAAMF_ESUCCESS;
 }
 
-int encode_string(luaamf_SaveBuffer *sb, const char *value, int len)
+int encode_string(luaamf_SaveBuffer * sb, const char * value, int len)
 {
   encode_int(sb, len * 2 + 1);
-  sb_write(sb, (unsigned char*)value, len);
+  sb_write(sb, (unsigned char *)value, len);
   return LUAAMF_ESUCCESS;
 }

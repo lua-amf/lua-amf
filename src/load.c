@@ -27,7 +27,7 @@ static unsigned char ls_readbyte(amf_LoadState * ls)
 {
   if (ls_good(ls))
   {
-    const unsigned char b = *ls->pos;
+    const unsigned char b = * ls->pos;
     ++ls->pos;
     --ls->unread;
     return b;
@@ -178,7 +178,7 @@ int luaamf_load(
         }
         else
         {
-          lua_pushlstring(L, (const char*)(ls.pos + byte_cnt + 1), ls.unread - byte_cnt - 1);
+          lua_pushlstring(L, (const char *)(ls.pos + byte_cnt + 1), ls.unread - byte_cnt - 1);
           result = LUAAMF_ESUCCESS;
         }
       }
