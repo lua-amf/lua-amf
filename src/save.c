@@ -25,7 +25,7 @@ static int save_table(
   )
 {
   luaamf_SaveBuffer numeric;
-  luaamf_SaveBuffer associated;
+  luaamf_SaveBuffer associative;
   int result = LUAAMF_ESUCCESS;
   int numeric_index = 1;
   int key_value_pairs_number = 0;
@@ -34,7 +34,7 @@ static int save_table(
     void * alloc_ud = NULL;
     lua_Alloc alloc_fn = lua_getallocf(L, &alloc_ud);
     sb_init(&numeric, alloc_fn, alloc_ud);
-    sb_init(&associated, alloc_fn, alloc_ud);
+    sb_init(&associative, alloc_fn, alloc_ud);
   }
 
   lua_pushnil(L);
@@ -51,13 +51,13 @@ static int save_table(
     }
     else
     {
-      /* Save associated key. */
-      result = save_value(&associated, L, key_pos, 0);
+      /* Save associative key. */
+      result = save_value(&associative, L, key_pos, 0);
 
-      /* Save associated value. */
+      /* Save associative value. */
       if (result == LUAAMF_ESUCCESS)
       {
-        result = save_value(&associated, L, value_pos, 1);
+        result = save_value(&associative, L, value_pos, 1);
         key_value_pairs_number++;
       }
     }
@@ -76,13 +76,13 @@ static int save_table(
   /* write serilization here */
   sb_writechar(sb, LUAAMF_ARRAY);
   encode_int(sb, 2 * key_value_pairs_number + 1);
-  sb_write(sb, sb_buffer(&associated, &(associated.buf_size)), associated.buf_size);
+  sb_write(sb, sb_buffer(&associative, &(associative.buf_size)), associative.buf_size);
   sb_writechar(sb, 0x001);
   sb_write(sb, sb_buffer(&numeric, &(numeric.buf_size)), numeric.buf_size);
   result = LUAAMF_ESUCCESS;
 
   sb_destroy(&numeric);
-  sb_destroy(&associated);
+  sb_destroy(&associative);
   return result;
 }
 
