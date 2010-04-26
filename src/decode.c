@@ -18,7 +18,10 @@ int decode_double(const unsigned char *byte_ref, double *val)
     char string[8];
   } d;
 
-  if (!byte_ref) return LUAAMF_EBADDATA;
+  if (!byte_ref)
+  {
+    return LUAAMF_EBADDATA;
+  }
 
   /* Flip */
   d.string[0] = byte_ref[7];
@@ -40,7 +43,10 @@ int decode_int(const unsigned char *byte_ref, int *val)
   int result = 0;
   int byte_cnt = 0;
   char byte;
-  if (!byte_ref) return LUAAMF_EBADDATA;
+  if (!byte_ref)
+  {
+    return LUAAMF_EBADDATA;
+  }
   byte = byte_ref[0];
 
   /* If 0x80 is set, int includes the next byte, up to 4 total bytes */

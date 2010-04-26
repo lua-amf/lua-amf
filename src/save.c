@@ -67,7 +67,10 @@ static int save_table(
       /* Remove value from stack, leave key for the next iteration. */
       lua_pop(L, 1);
     }
-    else return result;
+    else
+    {
+      return result;
+    }
   }
 
   /* write serilization here */
@@ -113,7 +116,10 @@ static int save_value(
     {
       size_t len;
       const char * buf = lua_tolstring(L, index, &len);
-      if(use_code) sb_writechar(sb, LUAAMF_STRING);
+      if(use_code)
+      {
+        sb_writechar(sb, LUAAMF_STRING);
+      }
       result = encode_string(sb, buf, len);
       break;
     }

@@ -38,7 +38,10 @@ static int l_load(lua_State * L)
 
   lua_pushboolean(L, 1);
 
-  if (!luaamf_load(L, data, len)) return 1;
+  if (!luaamf_load(L, data, len))
+  {
+    return 1;
+  }
 
   lua_pushnil(L);
   lua_replace(L, -3); /* Put nil before error message on stack */

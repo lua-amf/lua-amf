@@ -137,7 +137,10 @@ int luaamf_load(
         unsigned int value = 0;
         unsigned int byte_cnt = 0;
         char byte;
-        if (ls.pos == NULL) return LUAAMF_EBADDATA;
+        if (ls.pos == NULL)
+        {
+          return LUAAMF_EBADDATA;
+        }
         byte = ls.pos[0];
 
         /* If 0x80 is set, int includes the next byte, up to 4 total bytes */
