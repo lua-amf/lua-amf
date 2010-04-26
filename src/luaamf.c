@@ -55,7 +55,8 @@ static const struct luaL_reg R[] =
 };
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 LUALIB_API int luaopen_luaamf(lua_State * L)

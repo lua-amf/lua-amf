@@ -8,7 +8,8 @@
 #define LUAAMF_LUAHEADERS_H_
 
 #if defined (__cplusplus) && !defined (LUAAMF_LUABUILTASCPP)
-extern "C" {
+extern "C"
+{
 #endif
 
 #include <lua.h>

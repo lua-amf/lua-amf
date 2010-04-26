@@ -12,7 +12,8 @@
 int decode_double(const unsigned char *byte_ref, double *val)
 {
   /* Put bytes from byte array into double */
-  union aligned {
+  union aligned
+  {
     double d_val;
     char string[8];
   } d;
@@ -43,7 +44,8 @@ int decode_int(const unsigned char *byte_ref, int *val)
   byte = byte_ref[0];
 
   /* If 0x80 is set, int includes the next byte, up to 4 total bytes */
-  while ((byte & 0x80) && (byte_cnt < 3)) {
+  while ((byte & 0x80) && (byte_cnt < 3))
+  {
     result <<= 7;
     result |= byte & 0x7F;
     byte = byte_ref[byte_cnt + 1];
@@ -51,11 +53,14 @@ int decode_int(const unsigned char *byte_ref, int *val)
   }
 
   /* shift bits in last byte */
-  if (byte_cnt < 3) {
+  if (byte_cnt < 3)
+  {
     /* shift by 7, since the 1st bit is reserved for next byte flag */
     result <<= 7;
     result |= byte & 0x7F;
-  } else {
+  }
+  else
+  {
     /* shift by 8, since no further bytes are
        possible and 1st bit is not used for flag. */
     result <<= 8;
@@ -63,7 +68,8 @@ int decode_int(const unsigned char *byte_ref, int *val)
   }
 
   /* Move sign bit, since we're converting 29bit->32bit */
-  if (result & 0x10000000) {
+  if (result & 0x10000000)
+  {
     result -= 0x20000000;
   }
 

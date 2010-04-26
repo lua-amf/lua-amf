@@ -56,11 +56,11 @@ int luaamf_load(
   int result = LUAAMF_EFAILURE;
   int base = lua_gettop(L);
   ls_init(&ls, data, len);
-  if (!ls_good(&ls)) 
+  if (!ls_good(&ls))
   {
     result = LUAAMF_EBADDATA;
   }
-  else 
+  else
   {
     type = ls_readbyte(&ls);
     switch (type)
@@ -74,7 +74,7 @@ int luaamf_load(
       lua_pushnil(L);
       result = LUAAMF_ESUCCESS;
       break;
-  
+
     case LUAAMF_FALSE:
       if(len >= 2)
       {
@@ -82,9 +82,9 @@ int luaamf_load(
         break;
       }
       lua_pushboolean(L, 0);
-      result = LUAAMF_ESUCCESS;     
+      result = LUAAMF_ESUCCESS;
       break;
-  
+
     case LUAAMF_TRUE:
       if(len >= 2)
       {
@@ -92,9 +92,9 @@ int luaamf_load(
         break;
       }
       lua_pushboolean(L, 1);
-      result = LUAAMF_ESUCCESS;   
+      result = LUAAMF_ESUCCESS;
       break;
-  
+
     case LUAAMF_INT:
       if(len > 5)
       {
@@ -112,7 +112,7 @@ int luaamf_load(
         }
       }
       break;
-  
+
     case LUAAMF_DOUBLE:
       if(len > 9)
       {
@@ -120,7 +120,7 @@ int luaamf_load(
         break;
       }
       else
-      {     
+      {
         double c_value;
         lua_Number value;
         result = decode_double(ls.pos, &c_value);
@@ -131,9 +131,9 @@ int luaamf_load(
         }
       }
       break;
-  
+
     case LUAAMF_STRING:
-      {    
+      {
         unsigned int value = 0;
         unsigned int byte_cnt = 0;
         char byte;
@@ -141,27 +141,32 @@ int luaamf_load(
         byte = ls.pos[0];
 
         /* If 0x80 is set, int includes the next byte, up to 4 total bytes */
-        while ((byte & 0x80) && (byte_cnt < 3)) {
+        while ((byte & 0x80) && (byte_cnt < 3))
+        {
             value <<= 7;
             value |= byte & 0x7F;
             byte = ls.pos[byte_cnt + 1];
             byte_cnt++;
         }
-     
+
         /* shift bits in last byte */
-        if (byte_cnt < 3) {
+        if (byte_cnt < 3)
+        {
             /* shift by 7, since the 1st bit is reserved for next byte flag */
             value <<= 7;
             value |= byte & 0x7F;
-        } else {
+        }
+        else
+        {
             /* shift by 8, since no further bytes are
                possible and 1st bit is not used for flag. */
             value <<= 8;
             value |= byte & 0xff;
         }
-     
+
         /* Move sign bit, since we're converting 29bit->32bit */
-        if (value & 0x10000000) {
+        if (value & 0x10000000)
+        {
             value -= 0x20000000;
         }
         if(value != ((ls.unread  - byte_cnt) * 2 - 1))
@@ -193,7 +198,7 @@ int luaamf_load(
     case LUAAMF_EBADTYPE:
       lua_pushliteral(L, "can't load: bad data type");
       break;
-      
+
     case LUAAMF_EBADDATA:
       lua_pushliteral(L, "can't load: corrupt data");
       break;
