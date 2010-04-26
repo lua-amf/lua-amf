@@ -18,6 +18,9 @@ local test_data = assert(dofile('test/data/AMF_generated.lua'))
 
 -- Utility functions
 
+local ensure_equals = import 'lua-nucleo/ensure.lua' { 'ensure_equals' }
+local deepequals = import 'lua-nucleo/tdeepequals.lua' { 'tdeepequals' }
+
 local escape_string = function(str)
   return str:gsub(
       "[^0-9A-Za-z_%- :]",
@@ -25,38 +28,6 @@ local escape_string = function(str)
         return ("\\%03u"):format(c:byte())
       end
     )
-end
-
-local ensure_equals = function(msg, actual, expected)
-  if actual ~= expected then
-    error(
-        msg..":\n  actual: `"..escape_string(tostring(actual))
-        .."`\nexpected: `"..escape_string(tostring(expected)).."'"
-      )
-  end
-end
-
-local function deepequals(lhs, rhs)
-  if type(lhs) ~= "table" or type(rhs) ~= "table" then
-    return lhs == rhs
-  end
-
-  local checked_keys = {}
-
-  for k, v in pairs(lhs) do
-    checked_keys[k] = true
-    if not deepequals(v, rhs[k]) then
-      return false
-    end
-  end
-
-  for k, v in pairs(rhs) do
-    if not checked_keys[k] then
-      return false -- extra key
-    end
-  end
-
-  return true
 end
 
 -- Test helper functions
