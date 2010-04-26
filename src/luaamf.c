@@ -46,7 +46,7 @@ static int l_load(lua_State * L)
   return 2;
 }
 
-/* luabins Lua module API */
+/* lua-amf Lua module API */
 static const struct luaL_reg R[] =
 {
   { "save", l_save },

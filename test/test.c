@@ -11,9 +11,9 @@
 int main()
 {
 #ifdef __cplusplus
-  printf("luabins C API test compiled as C++\n");
+  printf("lua-amf C API test compiled as C++\n");
 #else
-  printf("luabins C API test compiled as plain C\n");
+  printf("lua-amf C API test compiled as plain C\n");
 #endif /* __cplusplus */
 
   return 0;
