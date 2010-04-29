@@ -1,7 +1,7 @@
 package = "lua-amf"
 version = "scm-1"
 source = {
-   url = "git://github.com/lua-amf/lua-amf.git"
+   url = "git://github.com/vladfedin/lua-amf.git"
 }
 description = {
    summary = "A library to work with AMF format",
