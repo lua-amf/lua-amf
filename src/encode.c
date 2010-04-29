@@ -25,7 +25,7 @@ int encode_double(luaamf_SaveBuffer * sb, double value)
     int i;
     unsigned char context[9];
     context[0] = LUAAMF_DOUBLE;
-    for(i = 1; i <= 8; i++)
+    for (i = 1; i <= 8; i++)
     {
       context[i] = char_value[8 - i];
     }
