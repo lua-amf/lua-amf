@@ -9,7 +9,7 @@ description = {
       This library is still in its embryonic phase.
       An appropriate description would be added later.
    ]],
-   homepage = "http://github.com/vladfedin/lua-amf",
+   homepage = "http://github.com/lua-amf/lua-amf",
    license = "MIT/X11"
 }
 dependencies = {
