@@ -1,13 +1,12 @@
 package = "lua-amf"
-version = "scm-1"
+version = "vladfedinscm-1"
 source = {
    url = "git://github.com/vladfedin/lua-amf.git"
 }
 description = {
    summary = "A library to work with AMF format",
    detailed = [[
-      This library is still in its embryonic phase.
-      An appropriate description would be added later.
+      The library currently allows user to save simple Lua data to AMF.
    ]],
    homepage = "http://github.com/vladfedin/lua-amf",
    license = "MIT/X11"
@@ -18,15 +17,14 @@ dependencies = {
 build = {
    type = "builtin",
    modules = {
-      lua-amf = {
+      amf = {
          sources = {
-            "src/load.c",
-            "src/save.c",
-            "src/encode.c",
             "src/decode.c",
+            "src/encode.c",
+            "src/load.c",
             "src/luaamf.c",
-            "src/lualess.c",
-            "src/savebuffer.c",
+            "src/save.c",
+            "src/savebuffer.c"
          },
          incdirs = {
             "src/"
