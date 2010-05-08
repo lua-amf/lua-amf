@@ -6,8 +6,7 @@ source = {
 description = {
    summary = "A library to work with AMF format",
    detailed = [[
-      This library is still in its embryonic phase.
-      An appropriate description would be added later.
+      The library currently allows user to save simple Lua data to AMF.
    ]],
    homepage = "http://github.com/lua-amf/lua-amf",
    license = "MIT/X11"
