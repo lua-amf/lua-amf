@@ -62,9 +62,9 @@ extern "C"
 {
 #endif
 
-LUALIB_API int luaopen_luaamf(lua_State * L)
+LUALIB_API int luaopen_amf(lua_State * L)
 {
-  luaL_register(L, "luaamf", R);
+  luaL_register(L, "amf", R);
   lua_pushliteral(L, LUAAMF_VERSION);
   lua_setfield(L, -2, "VERSION");
 

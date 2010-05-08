@@ -50,7 +50,7 @@ endif
 
 PROJECTNAME := @{projectname}
 
-SONAME   := $(PROJECTNAME).so
+SONAME   := amf.so
 ANAME    := lib$(PROJECTNAME).a
 HNAME    := $(PROJECTNAME).h
 TESTNAME := $(PROJECTNAME)-test

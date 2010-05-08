@@ -4,7 +4,7 @@
 
 package.cpath = "../lib/?.so;lib/?.so;"
 
-local luaamf_local = assert(require('luaamf'))
+local luaamf_local = assert(require('amf'))
 local print, require, assert = print, require, assert
 
 assert(pcall(dofile, 'lua-nucleo/strict.lua'), "lua-nucleo not found.")
