@@ -17,15 +17,14 @@ dependencies = {
 build = {
    type = "builtin",
    modules = {
-      lua-amf = {
+      amf = {
          sources = {
-            "src/load.c",
-            "src/save.c",
-            "src/encode.c",
             "src/decode.c",
+            "src/encode.c",
+            "src/load.c",
             "src/luaamf.c",
-            "src/lualess.c",
-            "src/savebuffer.c",
+            "src/save.c",
+            "src/savebuffer.c"
          },
          incdirs = {
             "src/"
