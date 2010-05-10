@@ -33,12 +33,12 @@ end
 -- Test helper functions
 
 local check_loaded_ok = function(eq, saved, data)
-  assert(eq(data, luaamf.load(saved)), "Not equal.")
+  assert(eq(data, luaamf_local.load(saved)), "Not equal.")
   return saved
 end
 
 local check_fn_ok = function(eq, ...)
-  local saved = assert(luaamf.save(...))
+  local saved = assert(luaamf_local.save(...))
   assert(type(saved) == "string")
   print("saved length", #saved, "(display truncated to 70 chars)")
   print(escape_string(saved):sub(1, 70))
@@ -51,12 +51,12 @@ local check_ok = function(...)
 end
 
 local check_load_ok = function(data)
-  local loaded = luaamf.load(data)
+  local loaded = luaamf_local.load(data)
   print("  Loaded:", loaded, "(type: " .. type(loaded) .. ")")
-  local saved = luaamf.save(loaded)
+  local saved = luaamf_local.save(loaded)
   -- this test wont pass due to integer <--> number <--> double decoding
   -- assert(deepequals(data, saved), "Not equal.")
-  local reloaded = luaamf.load(saved)
+  local reloaded = luaamf_local.load(saved)
   print("Reloaded:", reloaded, "(type: " .. type(reloaded) .. ")")
   if loaded == loaded then
     assert(deepequals(loaded, reloaded), "Not equal.")
@@ -67,14 +67,14 @@ end
 
 local check_fail_save = function(msg, ...)
   print("check_fail_save")
-  local res, err = luaamf.save(...)
+  local res, err = luaamf_local.save(...)
   ensure_equals("result", res, nil)
   ensure_equals("error message", err, msg)
 end
 
 local check_fail_load = function(msg, v)
   print("check_fail_load")
-  local res, err = luaamf.load(v)
+  local res, err = luaamf_local.load(v)
   ensure_equals("result", res, nil)
   ensure_equals("error message", err, msg)
 end
@@ -82,9 +82,9 @@ end
 -- Basic tests
 
 test "correct load" (function()
-  assert(luaamf_local == luaamf)
-  assert(type(luaamf.save) == "function")
-  assert(type(luaamf.load) == "function")
+  assert(luaamf_local == amf)
+  assert(type(luaamf_local.save) == "function")
+  assert(type(luaamf_local.load) == "function")
 end)
 
 test "generated_data" (function()
@@ -165,7 +165,7 @@ test "simple_array_check" (function()
   \006 \013 \115\101\099\111\110\100 two
   \006 \011 \116\104\105\114\100 three
   ]]
-  local res, err = luaamf.save({
+  local res, err = luaamf_local.save({
     one = "first here",
     two = "second here",
     three = "third here",
